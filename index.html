@@ -3,92 +3,212 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chatbot Coze - Nâng cao</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot Coze</title>
   <style>
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
     body {
+      background-color: #f4f4f4;
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
-      font-family: Arial, sans-serif;
-      position: relative;
     }
-
-    /* Nút mở chat */
-    #open-chat-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #007bff; /* Xanh dương */
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-    }
-
-    /* Khung chat */
-    #chat-frame {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      width: 360px;
-      height: 500px;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 12px;
+    .chat-container {
+      width: 400px;
+      height: 700px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .chat-header {
+      background-color: #4caf50;
+      color: #ffffff;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .toggle-button {
+      background-color: #ffffff;
+      color: #4caf50;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .question-list {
+      padding: 10px;
+      background-color: #e9e9e9;
+      border-bottom: 1px solid #ccc;
+      height: 250px;
+      overflow-y: auto;
       display: none;
-      z-index: 999;
+    }
+    .question-list button {
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: none;
+      background-color: #4caf50;
+      color: #ffffff;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background-color: #e9e9e9;
+      display: flex;
+      flex-direction: column;
+    }
+    .message {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      max-width: 80%;
+    }
+    .message.user {
+      background-color: #d1e7dd;
+      align-self: flex-end;
+    }
+    .message.bot {
+      background-color: #f8d7da;
+      align-self: flex-start;
+    }
+    .chat-input {
+      padding: 10px;
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .chat-input button {
+      margin-left: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      background-color: #4caf50;
+      color: #ffffff;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+<div class="chat-container">
+  <div class="chat-header">
+    Chatbot
+    <button class="toggle-button" onclick="toggleQuestionList()">Hiện câu hỏi</button>
+  </div>
 
-<!-- Nút mở chat -->
-<button id="open-chat-button">💬</button>
+  <div class="question-list">
+    <button onclick="sendPredefinedMessage('Quy định về quyền sở hữu trí tuệ?')">Quy định về quyền sở hữu trí tuệ?</button>
+    <button onclick="sendPredefinedMessage('Làm thế nào để bảo vệ quyền lợi người lao động?')">Làm thế nào để bảo vệ quyền lợi người lao động?</button>
+    <button onclick="sendPredefinedMessage('Quy định về quyền sử dụng đất đai?')">Quy định về quyền sử dụng đất đai?</button>
+    <button onclick="sendPredefinedMessage('Quyền và nghĩa vụ của công dân theo Hiến pháp?')">Quyền và nghĩa vụ của công dân theo Hiến pháp?</button>
+    <button onclick="sendPredefinedMessage('Luật bảo vệ quyền lợi người tiêu dùng?')">Luật bảo vệ quyền lợi người tiêu dùng?</button>
+    <button onclick="sendPredefinedMessage('Các quy định về hợp đồng lao động?')">Các quy định về hợp đồng lao động?</button>
+    <button onclick="sendPredefinedMessage('Quy trình thừa kế tài sản theo pháp luật?')">Quy trình thừa kế tài sản theo pháp luật?</button>
+    <button onclick="sendPredefinedMessage('Tội phạm hình sự và các hình thức xử lý?')">Tội phạm hình sự và các hình thức xử lý?</button>
+  </div>
 
-<!-- Khung chat -->
-<div id="chat-frame"></div>
+  <div class="chat-messages">
+    <div class="message bot">Xin chào! Tôi có thể giúp gì cho bạn?</div>
+  </div>
 
-<!-- SDK Coze -->
-<script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
+  <div class="chat-input">
+    <input type="text" placeholder="Nhập tin nhắn...">
+    <button>Gửi</button>
+  </div>
+</div>
+
 <script>
-  let chatClient = null;
-  const openChatButton = document.getElementById('open-chat-button');
-  const chatFrame = document.getElementById('chat-frame');
+window.onload = function () {
+  const chatInput = document.querySelector(".chat-input input");
+  const sendButton = document.querySelector(".chat-input button");
+  const chatMessages = document.querySelector(".chat-messages");
+  const questionList = document.querySelector(".question-list");
+  const toggleButton = document.querySelector(".toggle-button");
 
-  openChatButton.addEventListener('click', function () {
-    if (chatFrame.style.display === 'none') {
-      chatFrame.style.display = 'block';
-      if (!chatClient) {
-        chatClient = new CozeWebSDK.WebChatClient({
-          config: {
-            bot_id: '7348640557197246482', // Bot ID của bạn
-          },
-          componentProps: {
-            title: 'Trợ lý ảo',
-          },
-          auth: {
-            type: 'token',
-            token: 'pat_NmHF6NgozCv40dP2L3AZJKwe1sjzpPf3RlXYo8ZSTLYw9igBsvOqvPPdqkhbPAWD',
-            onRefreshToken: function () {
-              return 'pat_NmHF6NgozCv40dP2L3AZJKwe1sjzpPf3RlXYo8ZSTLYw9igBsvOqvPPdqkhbPAWD';
-            }
-          },
-          rootElement: document.getElementById('chat-frame'),
-        });
-      }
-    } else {
-      chatFrame.style.display = 'none';
+  window.toggleQuestionList = function () {
+    questionList.style.display = questionList.style.display === "none" ? "block" : "none";
+    toggleButton.innerText = questionList.style.display === "none" ? "Hiện câu hỏi" : "Ẩn câu hỏi";
+  };
+
+  function sendMessage(message) {
+    if (!message) return;
+    chatMessages.innerHTML += `<div class='message user'>${message}</div>`;
+    chatInput.value = "";
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    callCozeApi(message);
+  }
+
+  sendButton.onclick = () => {
+    const userMessage = chatInput.value.trim();
+    if (userMessage) sendMessage(userMessage);
+  };
+
+  chatInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      const userMessage = chatInput.value.trim();
+      if (userMessage) sendMessage(userMessage);
     }
   });
-</script>
 
+  window.sendPredefinedMessage = (question) => {
+    sendMessage(question);
+  };
+
+  async function callCozeApi(message) {
+    const apiUrl = "https://api.coze.com/open_api/v2/chat";
+    const apiKey = "pat_NmHF6NgozCv40dP2L3AZJKwe1sjzpPf3RlXYo8ZSTLYw9igBsvOqvPPdqkhbPAWD";
+    const botId = "7348640557197246482";
+
+    const body = {
+      bot_id: botId,
+      user: "user_" + Date.now(),
+      query: message,
+      stream: false
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + apiKey
+        },
+        body: JSON.stringify(body)
+      });
+
+      const data = await response.json();
+
+      const botReply = data?.messages?.[0]?.content || "Bot không có phản hồi.";
+      chatMessages.innerHTML += `<div class='message bot'>${botReply}</div>`;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    } catch (error) {
+      chatMessages.innerHTML += `<div class='message bot'>Lỗi kết nối API</div>`;
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  }
+};
+</script>
 </body>
 </html>
