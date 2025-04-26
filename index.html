@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chatbot Coze - Nâng cao</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    /* Nút mở chat */
+    #open-chat-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007bff; /* Xanh dương */
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    /* Khung chat */
+    #chat-frame {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 360px;
+      height: 500px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      display: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nút mở chat -->
+<button id="open-chat-button">💬</button>
+
+<!-- Khung chat -->
+<div id="chat-frame"></div>
+
+<!-- SDK Coze -->
+<script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.2.0-beta.6/libs/oversea/index.js"></script>
+<script>
+  let chatClient = null;
+  const openChatButton = document.getElementById('open-chat-button');
+  const chatFrame = document.getElementById('chat-frame');
+
+  openChatButton.addEventListener('click', function () {
+    if (chatFrame.style.display === 'none') {
+      chatFrame.style.display = 'block';
+      if (!chatClient) {
+        chatClient = new CozeWebSDK.WebChatClient({
+          config: {
+            bot_id: '7348640557197246482', // Bot ID của bạn
+          },
+          componentProps: {
+            title: 'Trợ lý ảo',
+          },
+          auth: {
+            type: 'token',
+            token: 'pat_NmHF6NgozCv40dP2L3AZJKwe1sjzpPf3RlXYo8ZSTLYw9igBsvOqvPPdqkhbPAWD',
+            onRefreshToken: function () {
+              return 'pat_NmHF6NgozCv40dP2L3AZJKwe1sjzpPf3RlXYo8ZSTLYw9igBsvOqvPPdqkhbPAWD';
+            }
+          },
+          rootElement: document.getElementById('chat-frame'),
+        });
+      }
+    } else {
+      chatFrame.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>
